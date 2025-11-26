@@ -1,0 +1,18 @@
+# Arquivos de Variáveis de Ambiente
+# IGNORAR SEMPRE: Contém chaves de API, senhas e credenciais.
+.env
+
+# Diretório de dependências do Python (opcional, mas recomendado)
+# Isso ignora o ambiente virtual/pacotes instalados
+__pycache__/
+.venv/
+venv/
+env/
+*.pyc
+
+# Arquivos de logs (opcional)
+*.log
+
+# Arquivos de sistema/SO (opcional)
+.DS_Store
+Thumbs.db
