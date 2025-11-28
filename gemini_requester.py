@@ -3,6 +3,7 @@ import argparse
 import os
 from google import genai
 from google.genai import types
+import time
 
 
 def build_prompt(vul_code: str, labels2: list[str]) -> str:
@@ -73,14 +74,21 @@ def main():
             labels2 = labels_by_file[rel_path]
             prompt = build_prompt(code, labels2)
 
+            print(f"🔹 Chamando IA para: {rel_path} ...")
+            start_time = time.time()
+
             response = client.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=prompt,
-                config=types.GenerateContentConfig(
-                    temperature=0.0
-                ) 
-                # generation_config={"temperature": 0.0}
+                generation_config={"temperature": 0.0}
             )
+
+            # Força 1 request por minuto
+            elapsed = time.time() - start_time
+            sleep_time = max(0, 60 - elapsed)
+            print(f"⏳ Aguardando {sleep_time:.1f}s antes da próxima requisição...")
+            time.sleep(sleep_time)
+
 
             print(response.text)
             raw_output = response.text.strip()
