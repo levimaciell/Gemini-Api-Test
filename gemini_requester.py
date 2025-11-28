@@ -15,7 +15,6 @@ def build_prompt(vul_code: str, labels2: list[str]) -> str:
         "as the keys for each element. Only answer with JSON."
     )
 
-
 def main():
     parser = argparse.ArgumentParser(
         description="Executa IA como assistente de SAST em todos os arquivos Python de um diretório."
@@ -38,25 +37,31 @@ def main():
     )
     args = parser.parse_args()
 
-    # Inicializa client da Gemini com o argumento
+    # Inicializa client da Gemini
     client = genai.Client(api_key=args.api_key)
 
+    # 🔥 AQUI O TRECHO QUE FALTAVA 🔥
+    with open(args.list, "r", encoding="utf-8") as f:
+        all_labels = json.load(f)
+
+    labels_by_file = {}
+    for item in all_labels:
+        fname = item["filename"]
+        labels_by_file.setdefault(fname, []).append(item["cwe"])
+    # 🔥 ----------------------------- 🔥
 
     results = []
 
-    # Iterar sobre todos os arquivos Python do diretório
     for root, _, files in os.walk(args.source_code_dir):
         for file in files:
             if not file.endswith(".py"):
                 continue
 
             file_path = os.path.join(root, file)
-
-            # Construir caminho relativo igual ao do SAST output
             rel_path = os.path.relpath(file_path, start=args.source_code_dir)
 
             if rel_path not in labels_by_file:
-                continue  # Nenhuma label do SAST para este arquivo → ignora
+                continue
 
             with open(file_path, "r", encoding="utf-8") as f:
                 code = f.read()
@@ -74,7 +79,7 @@ def main():
             try:
                 ai_result = json.loads(raw_output)
             except json.JSONDecodeError:
-                ai_result = raw_output  # Falha → salva texto bruto para análise
+                ai_result = raw_output
 
             results.append({
                 "filename": rel_path,
@@ -83,14 +88,12 @@ def main():
 
             print(f"✔️ Processado: {rel_path}")
 
-    # Salvar resultados no JSON final
     with open(args.output, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
 
     print("\n🎯 Concluído!")
     print(f"📁 Saída: {args.output}")
     print(f"📌 Arquivos processados: {len(results)}")
-
 
 if __name__ == "__main__":
     main()
