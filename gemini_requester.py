@@ -85,7 +85,7 @@ def main():
 
             # Força 1 request por minuto
             elapsed = time.time() - start_time
-            sleep_time = max(0, 60 - elapsed)
+            sleep_time = max(0, 30 - elapsed)
             print(f"⏳ Aguardando {sleep_time:.1f}s antes da próxima requisição...")
             time.sleep(sleep_time)
 
