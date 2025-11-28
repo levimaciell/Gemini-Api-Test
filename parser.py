@@ -2,6 +2,8 @@ import json
 import argparse
 import os
 
+# Yes, it was made with AI
+
 def main():
     parser = argparse.ArgumentParser(
         description="Converte JSON do Bandit para formato padronizado de labels (CWE + linha)"
