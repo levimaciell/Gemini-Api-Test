@@ -44,11 +44,13 @@ def main():
     with open(args.list, "r", encoding="utf-8") as f:
         all_labels = json.load(f)
 
+    # Organiza labels por arquivo (normalizando o caminho para apenas o nome do arquivo)
     labels_by_file = {}
     for item in all_labels:
-        fname = item["filename"]
+        # Extrair apenas o nome do arquivo
+        fname = os.path.basename(item["filename"])
         labels_by_file.setdefault(fname, []).append(item["cwe"])
-    # 🔥 ----------------------------- 🔥
+
 
     results = []
 
@@ -58,7 +60,7 @@ def main():
                 continue
 
             file_path = os.path.join(root, file)
-            rel_path = os.path.relpath(file_path, start=args.source_code_dir)
+            rel_path = os.path.basename(file_path)
 
             if rel_path not in labels_by_file:
                 continue
