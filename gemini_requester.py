@@ -2,6 +2,8 @@ import json
 import argparse
 import os
 from google import genai
+from google.genai import types
+
 
 def build_prompt(vul_code: str, labels2: list[str]) -> str:
     return (
@@ -74,7 +76,10 @@ def main():
             response = client.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=prompt,
-                generation_config={"temperature": 0.0}
+                config=types.GenerateContentConfig(
+                    temperature=0.0
+                ) 
+                # generation_config={"temperature": 0.0}
             )
 
             print(response.text)
