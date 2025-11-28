@@ -13,7 +13,6 @@ RUN ln -sf python3 /usr/bin/python
 
 WORKDIR /app
 
-RUN pip install -q -U google-genai
 RUN git clone https://github.com/abakhshandeh/ChatGPTasSAST.git
 RUN git clone https://github.com/levimaciell/Gemini-Api-Test.git
 

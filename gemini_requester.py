@@ -74,6 +74,8 @@ def main():
                 contents=prompt,
                 generation_config={"temperature": 0.0}
             )
+
+            print(response.text)
             raw_output = response.text.strip()
 
             try:
