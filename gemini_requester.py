@@ -4,9 +4,6 @@ import os
 from google import genai
 
 def build_prompt(vul_code: str, labels2: list[str]) -> str:
-    """
-    Prompt baseado no Experimento 3 do artigo.
-    """
     return (
         "Which of the following vulnerabilities from list of vulnerabilities exist "
         "in the python code which is delimited with triple backticks. also give the "
@@ -29,7 +26,11 @@ def main():
     )
     parser.add_argument(
         "-l", "--list", required=True,
-        help="Arquivo .json contendo labels do SAST (como do Bandit após parser)"
+        help="Arquivo .json contendo labels do SAST (ex: Bandit parser)"
+    )
+    parser.add_argument(
+        "-ak", "--api-key", required=True,
+        help="Chave da API do Google Gemini"
     )
     parser.add_argument(
         "-o", "--output", default="AiVulnAnalysis.json",
@@ -37,17 +38,9 @@ def main():
     )
     args = parser.parse_args()
 
-    # Carrega labels detectadas pelo SAST
-    with open(args.list, "r", encoding="utf-8") as f:
-        all_labels = json.load(f)
+    # Inicializa client da Gemini com o argumento
+    client = genai.Client(api_key=args.api_key)
 
-    # Organiza labels por arquivo
-    labels_by_file = {}
-    for item in all_labels:
-        fname = item["filename"]
-        labels_by_file.setdefault(fname, []).append(item["cwe"])
-
-    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
     results = []
 
