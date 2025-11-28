@@ -1,0 +1,247 @@
+[
+  {
+    "filename": "Testcases_Copilot/CWE-020/author_1.py",
+    "cwe": "CWE-20",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-020/author_2.py",
+    "cwe": "CWE-20",
+    "line": 1
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-020/author_2.py",
+    "cwe": "CWE-20",
+    "line": 8
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-020/codeql_2.py",
+    "cwe": "CWE-502",
+    "line": 2
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-020/codeql_2.py",
+    "cwe": "CWE-502",
+    "line": 14
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-022/author_2.py",
+    "cwe": "CWE-22",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-022/codeql_2.py",
+    "cwe": "CWE-22",
+    "line": 8
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-022/codeql_2.py",
+    "cwe": "CWE-377",
+    "line": 8
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-078/author_1.py",
+    "cwe": "CWE-78",
+    "line": 1
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-078/author_1.py",
+    "cwe": "CWE-78",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-078/codeql_1.py",
+    "cwe": "CWE-78",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-079/codeql_1.py",
+    "cwe": "CWE-94",
+    "line": 13
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-094/author_1.py",
+    "cwe": "CWE-78",
+    "line": 6
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-094/codeql_1.py",
+    "cwe": "CWE-78",
+    "line": 8
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-094/sonar_1.py",
+    "cwe": "CWE-78",
+    "line": 10
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-095/author_1.py",
+    "cwe": "CWE-78",
+    "line": 5
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-1204/sonar_1.py",
+    "cwe": "CWE-327",
+    "line": 1
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-1204/sonar_1.py",
+    "cwe": "CWE-327",
+    "line": 2
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-215/codeql_1.py",
+    "cwe": "CWE-94",
+    "line": 13
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-259/author_1.py",
+    "cwe": "CWE-259",
+    "line": 5
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-259/author_2.py",
+    "cwe": "CWE-259",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-295/codeql_1.py",
+    "cwe": "CWE-400",
+    "line": 8
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-319/author_2.py",
+    "cwe": "CWE-319",
+    "line": 1
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-319/author_2.py",
+    "cwe": "CWE-319",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-321/author_1.py",
+    "cwe": "CWE-259",
+    "line": 6
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-326/author_2.py",
+    "cwe": "CWE-327",
+    "line": 1
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-327/codeql_1.py",
+    "cwe": "CWE-327",
+    "line": 1
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-327/codeql_1.py",
+    "cwe": "CWE-327",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-330/author_1.py",
+    "cwe": "CWE-330",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-331/author_1.py",
+    "cwe": "CWE-330",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-377/codeql_1.py",
+    "cwe": "CWE-377",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-454/author_1.py",
+    "cwe": "CWE-259",
+    "line": 11
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-502/author_1.py",
+    "cwe": "CWE-502",
+    "line": 1
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-502/codeql_1.py",
+    "cwe": "CWE-502",
+    "line": 2
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-502/codeql_1.py",
+    "cwe": "CWE-502",
+    "line": 8
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-502/sonar_1.py",
+    "cwe": "CWE-20",
+    "line": 11
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-522/pearce_1.py",
+    "cwe": "CWE-259",
+    "line": 17
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-611/sonar_4.py",
+    "cwe": "CWE-20",
+    "line": 1
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-611/sonar_4.py",
+    "cwe": "CWE-20",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-643/sonar_1.py",
+    "cwe": "CWE-20",
+    "line": 2
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-643/sonar_1.py",
+    "cwe": "CWE-20",
+    "line": 4
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-732/author_1.py",
+    "cwe": "CWE-78",
+    "line": 9
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-732/author_1.py",
+    "cwe": "CWE-78",
+    "line": 9
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-776/codeql_1.py",
+    "cwe": "CWE-20",
+    "line": 2
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-776/codeql_1.py",
+    "cwe": "CWE-20",
+    "line": 12
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-798/author_1.py",
+    "cwe": "CWE-259",
+    "line": 7
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-798/codeql_1.py",
+    "cwe": "CWE-259",
+    "line": 11
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-918/codeql_1.py",
+    "cwe": "CWE-400",
+    "line": 13
+  },
+  {
+    "filename": "Testcases_Copilot/CWE-918/codeql_2.py",
+    "cwe": "CWE-400",
+    "line": 13
+  }
+]
