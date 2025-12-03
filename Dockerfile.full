@@ -23,6 +23,6 @@ RUN python3 -m venv bandit-env && \
     pip install semgrep && \
     pip install google-genai
 
-RUN mkdir resultadoComIa
+RUN mkdir results
 
 CMD ["/bin/bash", "-c", "source bandit-env/bin/activate && exec bash"]
