@@ -24,6 +24,6 @@ RUN python3 -m venv bandit-env && \
 
 RUN mkdir results
 
-RUN chmod +x executar_sast.sh
+RUN chmod +x Gemini-Api-Test/exec_sast.sh
 
 CMD ["/bin/bash", "-c", "source bandit-env/bin/activate && exec bash"]
