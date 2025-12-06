@@ -1,10 +1,9 @@
 import json
 import argparse
 import os
+import time
 from google import genai
 from google.genai import types
-import time
-
 
 def build_prompt(vul_code: str, labels2: list[str]) -> str:
     return (
@@ -40,77 +39,84 @@ def main():
     )
     args = parser.parse_args()
 
-    # Inicializa client da Gemini
     client = genai.Client(api_key=args.api_key)
 
-    # 🔥 AQUI O TRECHO QUE FALTAVA 🔥
     with open(args.list, "r", encoding="utf-8") as f:
         all_labels = json.load(f)
 
-    # Organiza labels por arquivo (normalizando o caminho para apenas o nome do arquivo)
     labels_by_file = {}
     for item in all_labels:
-        # Extrair apenas o nome do arquivo
         fname = os.path.basename(item["filename"])
         labels_by_file.setdefault(fname, []).append(item["cwe"])
 
-
-    results = []
-
+    # Contar quantos arquivos serão processados
+    files_to_process = []
     for root, _, files in os.walk(args.source_code_dir):
         for file in files:
-            if not file.endswith(".py"):
-                continue
+            if file.endswith(".py") and os.path.basename(file) in labels_by_file:
+                files_to_process.append(os.path.join(root, file))
 
-            file_path = os.path.join(root, file)
-            rel_path = os.path.basename(file_path)
+    total = len(files_to_process)
+    print(f"🔎 Encontrados {total} arquivos para processar pela IA.")
 
-            if rel_path not in labels_by_file:
-                continue
+    results = []
+    errors = []
 
-            with open(file_path, "r", encoding="utf-8") as f:
-                code = f.read()
+    processed = 0
+    for file_path in files_to_process:
+        processed += 1
+        rel_path = os.path.basename(file_path)
+        with open(file_path, "r", encoding="utf-8") as f:
+            code = f.read()
+        labels2 = labels_by_file.get(rel_path, [])
+        prompt = build_prompt(code, labels2)
 
-            labels2 = labels_by_file[rel_path]
-            prompt = build_prompt(code, labels2)
+        print(f"\n[{processed}/{total}] 🔹 Chamando IA para: {rel_path} ...")
+        start_time = time.time()
 
-            print(f"🔹 Chamando IA para: {rel_path} ...")
-            start_time = time.time()
-
+        try:
             response = client.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=prompt,
-                config=types.GenerateContentConfig( temperature=0.0 )
+                config=types.GenerateContentConfig(temperature=0.0)
             )
+            raw = response.text.strip()
+        except Exception as e:
+            print(f"❗ Erro de requisição para {rel_path}: {e}")
+            errors.append({"filename": rel_path, "error": str(e)})
+            continue
 
-            # Força 1 request por minuto
-            elapsed = time.time() - start_time
-            sleep_time = max(0, 30 - elapsed)
+        # esperar para limitar taxa se quiser
+        elapsed = time.time() - start_time
+        sleep_time = max(0, 30 - elapsed)
+        if sleep_time > 0:
             print(f"⏳ Aguardando {sleep_time:.1f}s antes da próxima requisição...")
             time.sleep(sleep_time)
 
+        try:
+            ai_result = json.loads(raw)
+        except json.JSONDecodeError:
+            print(f"❗ Resposta inválida da IA para {rel_path}. Output bruto será salvo para análise.")
+            errors.append({"filename": rel_path, "error": "Invalid JSON", "raw": raw})
+            ai_result = raw  # ou None, dependendo do que quiser fazer
 
-            print(response.text)
-            raw_output = response.text.strip()
+        results.append({
+            "filename": rel_path,
+            "ai_predictions": ai_result
+        })
 
-            try:
-                ai_result = json.loads(raw_output)
-            except json.JSONDecodeError:
-                ai_result = raw_output
+        print(f"✔️ Processado: {rel_path}")
 
-            results.append({
-                "filename": rel_path,
-                "ai_predictions": ai_result
-            })
-
-            print(f"✔️ Processado: {rel_path}")
-
+    # salvar resultados
     with open(args.output, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
-
-    print("\n🎯 Concluído!")
-    print(f"📁 Saída: {args.output}")
-    print(f"📌 Arquivos processados: {len(results)}")
+    print(f"\n🎯 Concluído! {processed}/{total} arquivos processados com IA.")
+    if errors:
+        print(f"⚠️ Ocorreram {len(errors)} erros. Veja log em erro_ia_log.json")
+        with open("erro_ia_log.json", "w", encoding="utf-8") as ef:
+            json.dump(errors, ef, indent=2, ensure_ascii=False)
+    else:
+        print("✅ Nenhum erro detectado durante as requisições à IA.")
 
 if __name__ == "__main__":
     main()
