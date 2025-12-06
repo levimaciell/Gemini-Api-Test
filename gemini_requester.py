@@ -56,6 +56,9 @@ def main():
             if file.endswith(".py") and os.path.basename(file) in labels_by_file:
                 files_to_process.append(os.path.join(root, file))
 
+    for file in files_to_process:
+        print(os.path.basename(file))
+
     total = len(files_to_process)
     print(f"🔎 Encontrados {total} arquivos para processar pela IA.")
 
