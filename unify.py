@@ -22,12 +22,14 @@ def load_json_if_exists(path):
         return []
 
 
-def normalize_key(entry):
-    return (
-        entry.get("filename", ""),
-        entry.get("cwe", "").upper(),
-        entry.get("line", None),
-    )
+def normalize_entry(entry, tool):
+    filename = os.path.basename(entry.get("filename", ""))
+    return {
+        "filename": filename,
+        "cwe": entry.get("cwe", "").upper(),
+        "line": entry.get("line", None),
+        "tool": tool
+    }
 
 
 def fuse_results(base_dir):
@@ -38,17 +40,22 @@ def fuse_results(base_dir):
         data = load_json_if_exists(filepath)
 
         for entry in data:
-            key = normalize_key(entry)
+            e = normalize_entry(entry, tool)
+            key = (e["filename"], e["cwe"], e["line"])
 
             if key not in merged:
                 merged[key] = {
-                    "filename": key[0],
-                    "cwe": key[1],
-                    "line": key[2],
-                    "tools": []
+                    "filename": e["filename"],
+                    "cwe": e["cwe"],
+                    "line": e["line"],
+                    "tools": set()
                 }
 
-            merged[key]["tools"].append(tool)
+            merged[key]["tools"].add(tool)
+
+    # converter sets para listas
+    for item in merged.values():
+        item["tools"] = list(item["tools"])
 
     return list(merged.values())
 
@@ -63,11 +70,10 @@ def main():
 
     parser.add_argument(
         "-o", "--output", default="SAST_Fused.json",
-        help="Arquivo JSON de saída (default: SAST_Fused.json)"
+        help="Arquivo JSON de saída"
     )
 
     args = parser.parse_args()
-
     base_dir = os.path.abspath(args.directory)
 
     print(f"📁 Procurando arquivos em: {base_dir}")
@@ -77,7 +83,7 @@ def main():
         json.dump(fused, f, indent=2, ensure_ascii=False)
 
     print("\n🎯 Fusão concluída!")
-    print(f"📌 Total de vulnerabilidades unificadas: {len(fused)}")
+    print(f"📌 Vulnerabilidades unificadas: {len(fused)}")
     print(f"📁 Saída salva em: {args.output}")
 
 
