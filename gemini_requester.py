@@ -49,6 +49,9 @@ def main():
         fname = os.path.basename(item["filename"])
         labels_by_file.setdefault(fname, []).append(item["cwe"])
 
+    for fname in labels_by_file.keys():
+        print(fname)
+
     # Contar quantos arquivos serão processados
     files_to_process = []
     for root, _, files in os.walk(args.source_code_dir):
@@ -99,8 +102,8 @@ def main():
         try:
             ai_result = json.loads(raw)
         except json.JSONDecodeError:
-            print(f"❗ Resposta inválida da IA para {rel_path}. Output bruto será salvo para análise.")
-            errors.append({"filename": rel_path, "error": "Invalid JSON", "raw": raw})
+            # print(f"❗ Resposta inválida da IA para {rel_path}. Output bruto será salvo para análise.")
+            # errors.append({"filename": rel_path, "error": "Invalid JSON", "raw": raw})
             ai_result = raw  # ou None, dependendo do que quiser fazer
 
         results.append({
