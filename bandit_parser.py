@@ -27,7 +27,7 @@ def main():
     labels = []
 
     for issue in bandit_data.get("results", []):
-        filename = issue.get("filename")
+        filename = os.path.basename(issue.get("filename"))
         line = issue.get("line_number")
 
         cwe_info = issue.get("issue_cwe", {})
