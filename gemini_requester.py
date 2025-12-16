@@ -5,6 +5,9 @@ import time
 from google import genai
 from google.genai import types
 
+MAX_RETRIES = 3
+RETRY_DELAY = 5
+
 def build_prompt(vul_code: str, labels2: list[str]) -> str:
     return (
         "Which of the following vulnerabilities from list of vulnerabilities exist "
@@ -49,9 +52,6 @@ def main():
         fname = os.path.basename(item["filename"])
         labels_by_file.setdefault(fname, []).append(item["cwe"])
 
-    for fname in labels_by_file.keys():
-        print(fname)
-
     # Contar quantos arquivos serão processados
     files_to_process = []
     for root, _, files in os.walk(args.source_code_dir):
@@ -72,50 +72,86 @@ def main():
     for file_path in files_to_process:
         processed += 1
         rel_path = os.path.basename(file_path)
+
         with open(file_path, "r", encoding="utf-8") as f:
             code = f.read()
+
         labels2 = labels_by_file.get(rel_path, [])
         prompt = build_prompt(code, labels2)
 
         print(f"\n[{processed}/{total}] 🔹 Chamando IA para: {rel_path} ...")
-        start_time = time.time()
 
-        try:
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt,
-                config=types.GenerateContentConfig(temperature=0.0)
-            )
-            raw = response.text.strip()
-        except Exception as e:
-            print(f"❗ Erro de requisição para {rel_path}: {e}")
-            errors.append({"filename": rel_path, "error": str(e)})
+        success = False
+        last_error = None
+        raw = None
+
+        for attempt in range(1, MAX_RETRIES + 1):
+            try:
+                print(f"   🔁 Tentativa {attempt}/{MAX_RETRIES}")
+
+                response = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(temperature=0.0)
+                )
+
+                raw = response.text.strip()
+
+                if raw.startswith("```"):
+                    raw = raw.replace("```json", "").replace("```", "").strip()
+
+                ai_result = json.loads(raw)
+                success = True
+                break
+
+            except json.JSONDecodeError:
+                last_error = "Invalid JSON"
+                print("   ⚠️ JSON inválido retornado pela IA")
+
+            except Exception as e:
+                last_error = str(e)
+                print(f"   ⚠️ Erro de requisição: {last_error}")
+
+            if attempt < MAX_RETRIES:
+                time.sleep(RETRY_DELAY)
+
+        # =============================
+        # Falha definitiva
+        # =============================
+        if not success:
+            print(f"❌ Falha definitiva em {rel_path}\n")
+            errors.append({
+                "filename": rel_path,
+                "error": last_error,
+                "raw": raw
+            })
             continue
 
-        try:
-            ai_result = json.loads(raw)
-        except json.JSONDecodeError:
-            # print(f"❗ Resposta inválida da IA para {rel_path}. Output bruto será salvo para análise.")
-            # errors.append({"filename": rel_path, "error": "Invalid JSON", "raw": raw})
-            ai_result = raw  # ou None, dependendo do que quiser fazer
-
+        # =============================
+        # Sucesso
+        # =============================
         results.append({
             "filename": rel_path,
             "ai_predictions": ai_result
         })
 
-        print(f"✔️ Processado: {rel_path}")
+        print(f"✔️ Processado com sucesso: {rel_path}\n")
 
-    # salvar resultados
+    # =============================
+    # Salva resultados
+    # =============================
     with open(args.output, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
-    print(f"\n🎯 Concluído! {processed}/{total} arquivos processados com IA.")
+
+    print(f"\n🎯 Concluído! {processed}/{total} arquivos processados.")
+
     if errors:
-        print(f"⚠️ Ocorreram {len(errors)} erros. Veja log em erro_ia_log.json")
+        print(f"⚠️ Ocorreram {len(errors)} erros. Veja: erro_ia_log.json")
         with open("erro_ia_log.json", "w", encoding="utf-8") as ef:
             json.dump(errors, ef, indent=2, ensure_ascii=False)
     else:
         print("✅ Nenhum erro detectado durante as requisições à IA.")
+
 
 if __name__ == "__main__":
     main()
