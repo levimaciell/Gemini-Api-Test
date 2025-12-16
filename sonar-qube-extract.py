@@ -53,7 +53,7 @@ def main():
     args = parser.parse_args()
 
     SONAR_URL = "http://localhost:9000"
-    PROJECT_KEY = "pyt1"
+    PROJECT_KEY = "gemini"
 
     print("🔍 Consultando vulnerabilidades no SonarQube...")
 

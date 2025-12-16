@@ -92,13 +92,6 @@ def main():
             errors.append({"filename": rel_path, "error": str(e)})
             continue
 
-        # esperar para limitar taxa se quiser
-        elapsed = time.time() - start_time
-        sleep_time = max(0, 30 - elapsed)
-        if sleep_time > 0:
-            print(f"⏳ Aguardando {sleep_time:.1f}s antes da próxima requisição...")
-            time.sleep(sleep_time)
-
         try:
             ai_result = json.loads(raw)
         except json.JSONDecodeError:
