@@ -12,7 +12,7 @@ def build_prompt(vul_code: str, labels2: list[str]) -> str:
     return (
         "Which of the following vulnerabilities from list of vulnerabilities exist "
         "in the python code which is delimited with triple backticks. also give the "
-        "line of the vulnerability in the code.\n\n"
+        "number of the line of the vulnerability in the code.\n\n"
         f"Python code:\n'''\n{vul_code}\n'''\n\n"
         "List of vulnerabilities:\n"
         + ", ".join(labels2) +
